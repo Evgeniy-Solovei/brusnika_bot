@@ -25,7 +25,12 @@ SECRET_KEY = 'django-insecure-$arwn**^a7!3j11+tsrax9t!4ds9#7($$il%=8@6nmgp+-^@!d
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# IP адреса или доменные имена, которые имеют доступ к приложению
+ALLOWED_HOSTS = ['89.23.112.10', 'localhost', '127.0.0.1', '0.0.0.0', 'brusnika-bot.twc1.net']
+# Переменная для управления CORS, содержит список доменов с которых разрешены запросы
+CORS_ALLOWED_ORIGINS = ['http://89.23.112.10', 'https://89.23.112.10', 'https://brusnika-bot.twc1.net', 'https://brusnika-bot.twc1.net']
+# Переменная определяет список доменов, которым Django доверяет при обработке CSRF-токенов.
+CSRF_TRUSTED_ORIGINS = ['http://89.23.112.10', 'https://89.23.112.10', 'https://brusnika-bot.twc1.net', 'https://brusnika-bot.twc1.net']
 
 
 # Application definition
