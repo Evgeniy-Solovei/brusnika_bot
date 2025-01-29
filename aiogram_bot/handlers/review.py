@@ -1,7 +1,6 @@
 import asyncio
 import logging
 from asyncio import to_thread
-
 from aiogram import types, F, Router, Bot
 from aiogram.exceptions import TelegramAPIError
 from aiogram.fsm.state import State, StatesGroup
@@ -11,7 +10,6 @@ from django.core.mail import send_mail
 from bot_core.models import UserProfile, Review
 
 router = Router()
-
 logger = logging.getLogger(__name__)
 
 
@@ -20,6 +18,8 @@ logger = logging.getLogger(__name__)
 class ReviewState(StatesGroup):
     waiting_for_text = State()  # Ожидание текста отзыва
     waiting_for_rating = State()  # Ожидание рейтинга
+
+
 # Обработчик команды "Оставить отзыв"
 @router.message(F.text == "Оставить отзыв")
 async def handle_review_start(message: types.Message, state: FSMContext):
@@ -36,6 +36,8 @@ async def handle_review_text(message: types.Message, state: FSMContext):
     # Переводим пользователя в состояние ожидания рейтинга
     await state.set_state(ReviewState.waiting_for_rating)
     await message.answer("Оцените нас от 1 до 5:")
+
+
 # Обработчик рейтинга
 @router.message(ReviewState.waiting_for_rating)
 async def handle_review_rating(message: types.Message, state: FSMContext, bot: Bot):
@@ -75,8 +77,14 @@ async def handle_review_rating(message: types.Message, state: FSMContext, bot: B
     # Отправляем письмо на почту
     admin_emails = [admin.email async for admin in UserProfile.objects.filter(is_admin=True).aiterator()]
 
+    logger.info(f"Attempting to send email to: {admin_emails}")
+
+    if not admin_emails:
+        logger.warning("No admin emails found in database!")
+        return
     try:
         # Явно передаем все параметры для send_mail
+        logger.debug("Sending test email...")
         await to_thread(
             send_mail,
             subject="Новый отзыв",
@@ -89,6 +97,6 @@ async def handle_review_rating(message: types.Message, state: FSMContext, bot: B
             auth_password=None,
             connection=None
         )
+        logger.info("Test email sent successfully")
     except Exception as e:
-        logger.error(f"Email error: {str(e)}")
-        await message.answer("Ошибка отправки, но отзыв сохранен!")
+        logger.error(f"Test email failed: {str(e)}", exc_info=True)
