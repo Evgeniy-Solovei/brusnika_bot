@@ -10,6 +10,12 @@ COPY requirements.txt requirements.txt
 EXPOSE 8000
 # Устанавливаем часовой пояс Europe/Moscow
 ENV TZ=Europe/Moscow
+# Установка сетевых утилит для диагностики
+RUN apt-get update && apt-get install -y \
+    telnet \
+    iputils-ping \
+    dnsutils \
+    && rm -rf /var/lib/apt/lists/* \
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 # Устанавливаем зависимости из файла requirements.txt без кэша
 RUN pip install -r requirements.txt
