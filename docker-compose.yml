@@ -2,36 +2,20 @@ version: '3.9'
 
 services:
   bot_core:
-    networks:
-      bot_core:
-        aliases:
-          - bot-network
-    sysctls:
-      net.core.somaxconn: "1024"         # Исправленный формат
-      net.ipv4.tcp_syncookies: "0"       # Кавычки для числовых значений
-    dns:                                 # Добавляем явные DNS-серверы
-      - 8.8.8.8
-      - 1.1.1.1
+    network_mode: host  # Используем сеть хоста для прямого доступа
     container_name: bot_core_container
     build:
+      context: .
       dockerfile: Dockerfile
-    command: > 
-      sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000 & python bot.py"
-    ports:
-      - '8000:8000'
-      - '465:465'                        # Добавляем проброс SMTP порта
     env_file:
       - .env
     environment:
       TZ: Europe/Moscow
     volumes:
-      - .:/brusnika_bot                  # Должно совпадать с WORKDIR в Dockerfile
+      - .:/brusnika_bot
     restart: unless-stopped
-    extra_hosts:                         # Добавляем хост для SMTP
-      - "smtp.yandex.ru:213.180.204.62"
+    cap_add:  # Даем необходимые привилегии
+      - NET_ADMIN
+      - SYS_ADMIN
 
-networks:
-  bot_core:
-    driver: bridge
-    attachable: true
-    name: brusnika_network               # Явное имя сети
+# Явно не определяем networks, так как используем network_mode: host
