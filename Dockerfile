@@ -1,25 +1,24 @@
-# Используем базовый образ Python 3.12
 FROM python:3.12
-# Команда для вывода логов в консоле
+
+# Установка переменных окружения
 ENV PYTHONUNBUFFERED=1
-# Устанавливаем рабочий каталог
-WORKDIR /brusnika_bot
-# Копируем файл requirements.txt
-COPY requirements.txt requirements.txt
-# Экспортируем порт, который будет использоваться для доступа к приложению
-EXPOSE 8000
-# Устанавливаем часовой пояс Europe/Moscow
 ENV TZ=Europe/Moscow
-# Установка сетевых утилит для диагностики
+
+# Установка зависимостей и настройка времени
 RUN apt-get update && apt-get install -y \
     telnet \
     iputils-ping \
     dnsutils \
     && rm -rf /var/lib/apt/lists/* \
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-# Устанавливаем зависимости из файла requirements.txt без кэша
+    && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime \
+    && echo $TZ > /etc/timezone
+
+# Рабочая директория и копирование файлов
+WORKDIR /brusnika_bot
+COPY requirements.txt .
 RUN pip install -r requirements.txt
-# Копируем файлы и папки из папки CRM_system в рабочий каталог WORKDIR
-COPY brusnika_bot .
-# Запускаем миграции, сервер и бота
+COPY . .
+
+# Порт и команда запуска
+EXPOSE 8000
 CMD sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000 & python bot.py"
