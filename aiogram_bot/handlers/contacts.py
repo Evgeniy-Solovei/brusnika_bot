@@ -9,7 +9,7 @@ async def handle_contacts(message: types.Message):
     contacts_text = (
         "📞 <b>Телефон:</b> +7 936 000 6257\n"
         "📧 <b>Почта:</b> ooo.brusnika@yandex.ru\n"
-        "📱 <b>Telegram:</b> <a href='https://t.me/brusnika24_ru'>Написать в Telegram</a>"
+        "📱 <b>Telegram:</b> <a href='https://t.me/brusnika24_ru'>Написать в Telegram</a>\n"
         "💬 <b>WhatsApp:</b> <a href='https://wa.me/79360006257'>Написать в WhatsApp</a>\n"
     )
     back_button = types.KeyboardButton(text="Назад")
