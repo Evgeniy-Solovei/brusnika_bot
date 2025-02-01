@@ -4,7 +4,8 @@ import asyncio
 import os
 from aiogram import Bot, Dispatcher
 from dotenv import load_dotenv
-from aiogram_bot.handlers import start, rules, back, contract, contacts, review, questions, no_handlers
+from aiogram_bot.handlers import start, rules, back, contract, contacts, review, questions, no_handlers, \
+    contactless_check_in, pay
 
 load_dotenv()
 TOKEN = os.getenv("TOKEN")
@@ -30,6 +31,8 @@ if __name__ == "__main__":
     dp.include_routers(questions.router)
     dp.include_routers(contacts.router)
     dp.include_routers(review.router)
+    dp.include_routers(contactless_check_in.router)
+    dp.include_routers(pay.router)
     dp.include_routers(no_handlers.router)
 
     asyncio.run(main())
