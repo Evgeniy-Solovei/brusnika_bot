@@ -7,7 +7,6 @@ router = Router()
 
 @router.message(lambda message: message.text == "Бесконтактное заселение")
 async def handle_contactless_check_in(message: types.Message):
-    print("Текущая рабочая директория:", os.getcwd())
     text = (
         "Заселение происходит дистанционно (бесконтактно). Рядом с дверью квартиры установлен бокс для ключей. После "
         "подтверждения бронирования, вам передаётся вся необходимая информация – код домофона, код от кейбокса. "
@@ -20,9 +19,6 @@ async def handle_contactless_check_in(message: types.Message):
     base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
     photo1_path = os.path.join(base_path, 'agreements', '1.png')
     photo2_path = os.path.join(base_path, 'agreements', '2.png')
-    print("Путь нахуй:", base_path)
-    print("Путь к первому фото:", photo1_path)
-    print("Путь ко второму фото:", photo2_path)
     if not os.path.exists(photo1_path):
         raise FileNotFoundError(f"Файл {photo1_path} не найден.")
     if not os.path.exists(photo2_path):
