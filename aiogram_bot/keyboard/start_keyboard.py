@@ -6,7 +6,7 @@ async def get_main_keyboard():
     # Создаем кнопки
     buttons = [
         KeyboardButton(text="Забронировать",
-                       web_app=WebAppInfo(url="https://realtycalendar.ru/booking-widget/00e320c273dd70b276b78cd2ba5a91ae")),
+                       web_app=WebAppInfo(url="https://homereserve.ru/AAAAFQ")),
         KeyboardButton(text="Оплатить"),
         KeyboardButton(text="Правила заселения"),
         KeyboardButton(text="Бесконтактное заселение"),
